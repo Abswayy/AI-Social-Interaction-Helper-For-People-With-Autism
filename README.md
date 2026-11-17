@@ -2,7 +2,6 @@
 
 **Real-time social assistant for smart glasses.** It recognizes the person you're talking to, remembers your past conversations with them, and shows short live cues on the lens: who they are, when it's your turn to speak, their emotional tone, and reply suggestions when you get stuck.
 
-![Status](https://img.shields.io/badge/status-in%20development-orange)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-WebSocket-009688)
 ![OpenCV](https://img.shields.io/badge/OpenCV-YuNet%20%2B%20SFace-5C3EE8)
