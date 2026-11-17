@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>People · Social Cue Glasses</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Social Cue Glasses</div>
+  <nav class="tabs">
+    <a href="/">Live</a>
+    <a href="/people" aria-current="page">People</a>
+    <a href="/register">Register a face</a>
+  </nav>
+  <div class="status">
+    <span class="pill" id="dbState"></span>
+    <a class="btn small" href="/api/export" download>Export all as JSON</a>
+  </div>
+</header>
+
+<main class="people">
+  <aside class="panel stack">
+    <input type="text" id="search" placeholder="Search by name, fact or topic" aria-label="Search people">
+    <div class="people-list" id="list"></div>
+  </aside>
+  <section class="detail" id="detail">
+    <div class="panel empty">Pick a person on the left to see what you know about them.</div>
+  </section>
+</main>
+
+<script src="/static/people.js"></script>
+</body>
+</html>

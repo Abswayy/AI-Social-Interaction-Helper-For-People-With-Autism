@@ -1,0 +1,11 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+opencv-python>=4.8        # YuNet face detector + SFace recogniser (models ~40 MB, auto-downloaded)
+numpy>=1.26
+webrtcvad-wheels>=2.0.11  # voice activity / turn detection
+httpx>=0.27               # speech-to-text + LLM API calls
+psycopg[binary]>=3.1      # Postgres, only used when DATABASE_URL is set
+pytest>=8                 # tests only
+
+# Optional, only for STT_PROVIDER=local (offline speech-to-text):
+# faster-whisper>=1.0

@@ -1,0 +1,25 @@
+# Secrets
+.env
+
+# Local data: face embeddings, photos and transcripts of real people
+data/glasses.db
+data/*.db
+
+# Face models are auto-downloaded on first run (~40 MB)
+data/models/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# TLS certs for local HTTPS
+*.pem
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

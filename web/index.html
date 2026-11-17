@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live · Social Cue Glasses</title>
+<link rel="stylesheet" href="/static/style.css?v=4">
+<style>
+  /* Idle caption card. An id rule so a cached stylesheet cannot keep it solid. */
+  #lensPlate { opacity: 0.18; transition: opacity .35s ease; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Social Cue Glasses</div>
+  <nav class="tabs">
+    <a href="/" aria-current="page">Live</a>
+    <a href="/people">People</a>
+    <a href="/register">Register a face</a>
+  </nav>
+  <div class="status">
+    <span id="conn" class="pill bad">Offline</span>
+    <span id="rec" class="pill live" hidden>Listening</span>
+    <span id="voiceState" class="pill">Voice not set up</span>
+  </div>
+</header>
+
+<main class="live">
+  <section class="stack pov">
+    <div class="camera" id="stage">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="placeholder" id="camPlaceholder">Press Start. Captions appear here, on the view, the way they will on the glasses.</div>
+      <div id="facebox" hidden></div>
+      <div class="lens resting" id="hud" data-place="bottom" data-side="left" aria-live="polite" hidden>
+        <div class="lens-plate" id="lensPlate">
+          <div class="who-row" id="whoRow">
+            <span class="lens-name" id="hudPerson"></span>
+            <span class="lens-rel" id="hudRel"></span>
+            <span class="lens-new" id="hudNew" hidden>new</span>
+            <span class="lens-mood" id="hudEmotion"></span>
+          </div>
+          <div class="lens-context" id="hudHint"></div>
+          <div class="lens-context" id="hudDetail"></div>
+          <div class="lens-ask" id="hudAsk"></div>
+          <div class="replies" id="hudReplies"></div>
+          <div class="lens-social" id="hudSocial"></div>
+          <div class="lens-note" id="hudNote"></div>
+        </div>
+        <div class="lens-turn" id="hudTurn" hidden></div>
+      </div>
+    </div>
+    <div class="row">
+      <button id="start" class="primary">Start</button>
+      <button id="end" disabled>End conversation</button>
+      <button id="hudonly" title="Fill the screen with this view. Press Esc to leave.">Glasses view only</button>
+    </div>
+  </section>
+
+  <section class="stack side">
+    <div class="panel talk">
+      <div class="talk-head">
+        <h3>Who is speaking</h3>
+        <div class="segmented" role="group" aria-label="Speaker detection">
+          <button id="modeAuto" aria-pressed="true">Automatic</button>
+          <button id="modeManual" aria-pressed="false">Manual</button>
+        </div>
+      </div>
+      <p class="muted small" id="modeHelp"></p>
+      <button id="ptt" disabled>Hold while you speak (or hold Space)</button>
+      <div class="row">
+        <button id="calib" disabled>Set up my voice</button>
+        <span class="muted small" id="calibInfo"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="talk-head"><h3>Transcript</h3><span class="muted small">Wrong person? Click the line to switch it.</span></div>
+      <div class="transcript" id="transcript"><p class="muted small" id="transcriptEmpty">Nothing yet.</p></div>
+      <div id="saved"></div>
+    </div>
+
+    <details class="panel settings">
+      <summary><strong>What to show on the glasses</strong></summary>
+      <div class="inline"><span>Reply suggestions</span>
+        <select id="num_replies"><option>0</option><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+      <p class="muted small">One reply appears after 5 seconds of silence, or after a couple of umms and ahhs. If the conversation is still stuck at 8 seconds, that line stays and one ice breaker is added.</p>
+      <label class="check"><input type="checkbox" id="fade_idle" checked> Fade captions until needed</label>
+      <p class="muted small">The box stays dim, then brightens for 8 seconds when someone hesitates or a suggestion appears. "Your turn" and "let them finish" stay bright.</p>
+      <label class="check"><input type="checkbox" id="social" checked> Social tips</label>
+      <label class="check"><input type="checkbox" id="emotion" checked> How they seem to feel</label>
+      <label class="check"><input type="checkbox" id="turn_hints" checked> When to speak or pause</label>
+      <div class="inline"><span>Max words per line</span><input type="number" id="max_words" min="4" max="20" value="10"></div>
+    </details>
+  </section>
+</main>
+
+<script src="/static/client.js?v=5"></script>
+</body>
+</html>

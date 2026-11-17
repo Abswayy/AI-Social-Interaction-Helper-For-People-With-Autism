@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register a face · Social Cue Glasses</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Social Cue Glasses</div>
+  <nav class="tabs">
+    <a href="/">Live</a>
+    <a href="/people">People</a>
+    <a href="/register" aria-current="page">Register a face</a>
+  </nav>
+</header>
+
+<main class="narrow">
+  <div>
+    <h1>Register your face</h1>
+    <p class="muted" style="margin-top:6px">So the glasses can greet you by name. Take two or three photos facing the camera,
+      turning your head slightly between them, or upload photos with only you in them.
+      If the glasses already met you, this adds your name to that record.</p>
+  </div>
+
+  <section class="panel reg">
+    <div class="stack">
+      <video id="regVideo" autoplay playsinline muted></video>
+      <div class="row">
+        <button id="cam">Turn on camera</button>
+        <button id="snap" disabled>Take photo</button>
+      </div>
+      <label class="small muted">Or upload photos <input id="files" type="file" accept="image/*" multiple></label>
+    </div>
+    <div class="stack">
+      <label class="field">Your name <input id="name" type="text" autocomplete="name"></label>
+      <label class="field">How the wearer knows you <span class="hint">Optional, e.g. classmate, neighbour, aunt</span>
+        <input id="relationship" type="text"></label>
+      <div>
+        <strong class="small">Photos</strong>
+        <div class="shots" id="shots"><span class="muted small">No photos yet.</span></div>
+      </div>
+      <div class="row"><button id="submit" class="primary">Register</button><button id="clear" class="link">Clear photos</button></div>
+      <p id="msg" role="status"></p>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let photos = [];
+
+$("cam").onclick = async () => {
+  try {
+    $("regVideo").srcObject = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
+    $("snap").disabled = false;
+  } catch (e) { $("msg").textContent = "Camera could not start: " + e.message; }
+};
+$("snap").onclick = () => {
+  const v = $("regVideo"), c = document.createElement("canvas");
+  c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
+  addPhoto(c.toDataURL("image/jpeg", 0.9));
+};
+$("files").onchange = (e) => [...e.target.files].forEach((f) => {
+  const r = new FileReader(); r.onload = () => addPhoto(r.result); r.readAsDataURL(f);
+});
+$("clear").onclick = () => { photos = []; renderShots(); };
+function addPhoto(url) { photos = [...photos, url].slice(-5); renderShots(); }
+function renderShots() {
+  const s = $("shots"); s.innerHTML = "";
+  if (!photos.length) { s.innerHTML = '<span class="muted small">No photos yet.</span>'; return; }
+  photos.forEach((p) => { const i = document.createElement("img"); i.src = p; i.alt = "Your photo"; s.append(i); });
+}
+$("submit").onclick = async () => {
+  const name = $("name").value.trim();
+  if (!name) { $("msg").textContent = "Add your name first."; return; }
+  if (!photos.length) { $("msg").textContent = "Add at least one photo."; return; }
+  $("submit").disabled = true; $("msg").textContent = "Registering…";
+  try {
+    const r = await fetch("/api/register", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, relationship: $("relationship").value.trim(), photos }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || "Registration failed");
+    $("msg").innerHTML = "";
+    $("msg").append(`Registered ${j.name}. ${j.photos_used} photo${j.photos_used === 1 ? "" : "s"} used` +
+      (j.linked_existing ? ", and linked to the record the glasses already had. " : ". "));
+    const a = document.createElement("a"); a.href = `/people#${j.id}`; a.textContent = "See profile";
+    $("msg").append(a);
+    photos = []; renderShots();
+  } catch (e) { $("msg").textContent = e.message; }
+  $("submit").disabled = false;
+};
+</script>
+</body>
+</html>
